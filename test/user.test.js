@@ -1,6 +1,5 @@
 import supertest from "supertest"
 import { web } from "../src/application/web.js"
-import { logger } from "../src/application/logging.js"
 import { createTestUser, getTestUser, removeTestUser } from "./test-utils.js"
 import bcrypt from "bcrypt"
 
@@ -9,14 +8,12 @@ describe("POST /api/users", function () {
     await removeTestUser()
   })
 
-  it("should can regustier new user", async () => {
+  it("should can registier new user", async () => {
     const result = await supertest(web).post("/api/users").send({
       username: "test",
       password: "rahasia",
       name: "test",
     })
-
-    console.log(result.status)
 
     expect(result.status).toBe(200)
     expect(result.body.data.username).toBe("test")
