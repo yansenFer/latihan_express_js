@@ -208,8 +208,6 @@ describe("GET /api/contacts", function () {
       })
       .set("Authorization", "test")
 
-    logger.info(result.body.data)
-
     expect(result.status).toBe(200)
     expect(result.body.data.length).toBe(5)
     expect(result.body.paging.page).toBe(2)
