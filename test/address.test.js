@@ -214,4 +214,86 @@ describe("GET /api/contacts/:contactId/addresses/:addressId", function () {
 
     expect(result.status).toBe(404)
   })
+
+  it("should reject if contact is not found", async () => {
+    const testContact = await getTestContact()
+    const testAddress = await getTestAddress()
+
+    const result = await supertest(web)
+      .put(
+        "/api/contacts/" +
+          (testContact.id + 1) +
+          "/addresses/" +
+          testAddress.id +
+          1
+      )
+      .set("Authorization", "test")
+      .send({
+        street: "Jalan update",
+        city: "Kota update",
+        province: "Provinsi update",
+        country: "indonesia",
+        postal_code: "123123",
+      })
+
+    expect(result.status).toBe(404)
+  })
+})
+
+describe("DELETE /api/contacts/:contactId/addresses/:addressId", function () {
+  beforeEach(async () => {
+    await createTestUser()
+    await createTestContact()
+    await createTestAddress()
+  })
+
+  afterEach(async () => {
+    await removeAllTestAddress()
+    await removeAllTestContacts()
+    await removeTestUser()
+  })
+
+  it("should can delete address", async () => {
+    const testContact = await getTestContact()
+    const testAddress = await getTestAddress()
+
+    const result = await supertest(web)
+      .delete(
+        "/api/contacts/" + testContact.id + "/addresses/" + testAddress.id
+      )
+      .set("Authorization", "test")
+
+    expect(result.status).toBe(200)
+    expect(result.body.data).toBe("ok")
+  })
+
+  it("should reject if address is not found", async () => {
+    const testContact = await getTestContact()
+    const testAddress = await getTestAddress()
+
+    const result = await supertest(web)
+      .delete(
+        "/api/contacts/" + testContact.id + "/addresses/" + (testAddress.id + 1)
+      )
+      .set("Authorization", "test")
+
+    expect(result.status).toBe(404)
+  })
+
+  it("should reject if contact is not found", async () => {
+    const testContact = await getTestContact()
+    const testAddress = await getTestAddress()
+
+    const result = await supertest(web)
+      .delete(
+        "/api/contacts/" +
+          (testContact.id + 1) +
+          "/addresses/" +
+          testAddress.id +
+          1
+      )
+      .set("Authorization", "test")
+
+    expect(result.status).toBe(404)
+  })
 })
