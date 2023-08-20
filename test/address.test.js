@@ -105,7 +105,7 @@ describe("GET /api/contacts/:contactId/addresses/:addressId", function () {
       .set("Authorization", "test")
 
     expect(result.status).toBe(200)
-    expect(result.body.data.id).toBeDefined
+    expect(result.body.data.id).toBeDefined()
     expect(result.body.data.street).toBe("Jalan apa"),
       expect(result.body.data.city).toBe("Kota apa"),
       expect(result.body.data.province).toBe("Provinsi apa"),
@@ -292,6 +292,41 @@ describe("DELETE /api/contacts/:contactId/addresses/:addressId", function () {
           testAddress.id +
           1
       )
+      .set("Authorization", "test")
+
+    expect(result.status).toBe(404)
+  })
+})
+
+describe("GET /api/contacts/:contactId/addresses", function () {
+  beforeEach(async () => {
+    await createTestUser()
+    await createTestContact()
+    await createTestAddress()
+  })
+
+  afterEach(async () => {
+    await removeAllTestAddress()
+    await removeAllTestContacts()
+    await removeTestUser()
+  })
+
+  it("should can get address", async () => {
+    const testContact = await getTestContact()
+
+    const result = await supertest(web)
+      .get("/api/contacts/" + testContact.id + "/addresses/")
+      .set("Authorization", "test")
+
+    expect(result.status).toBe(200)
+    expect(result.body.data.length).toBe(1)
+  })
+
+  it("should reject if contactid is not valid", async () => {
+    const testContact = await getTestContact()
+
+    const result = await supertest(web)
+      .get("/api/contacts/" + (testContact.id + 1) + "/addresses/")
       .set("Authorization", "test")
 
     expect(result.status).toBe(404)
