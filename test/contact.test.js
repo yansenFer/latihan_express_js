@@ -7,8 +7,8 @@ import {
   removeAllTestContacts,
   removeTestUser,
 } from "./test-utils"
-import { web } from "../src/application/web"
-import { logger } from "../src/application/logging"
+import { web } from "../src/application/web.js"
+import { logger } from "../src/application/logging.js"
 
 describe("POST /api/contacts", function () {
   beforeEach(async () => {

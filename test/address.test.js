@@ -10,7 +10,7 @@ import { createTestUser } from "./test-utils"
 import { removeTestUser } from "./test-utils"
 import supertest from "supertest"
 import { web } from "../src/application/web"
-import { logger } from "../src/application/logging"
+import { logger } from "../src/application/logging.js"
 
 describe("POST /api/Address", function () {
   beforeEach(async () => {

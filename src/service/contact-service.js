@@ -1,5 +1,4 @@
-import { valid } from "joi"
-import { prismaClient } from "../application/database"
+import { prismaClient } from "../application/database.js"
 import {
   createContactValidation,
   getContactValidation,
