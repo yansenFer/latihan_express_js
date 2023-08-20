@@ -3,6 +3,7 @@ import { validate } from "../validation/validation.js"
 import {
   createAddressValidation,
   getAddressValidation,
+  updateAddressValidation,
 } from "../validation/address-validation"
 import { getContactValidation } from "../validation/conctact-validation"
 import { ResponseError } from "../error/response-error"
@@ -70,45 +71,43 @@ const get = async (user, contactId, addressId) => {
 
   return address
 }
-//   if (!contact) {
-//     throw new ResponseError(404, "contact is not found")
-//   }
-//   return contact
-// }
 
-// const update = async (user, request) => {
-//   const contact = validate(updateContactValidation, request)
+const update = async (user, contactId, request) => {
+  contactId = await checkContactMustExist(user, contactId)
+  const address = validate(updateAddressValidation, request)
 
-//   const totalContactInDatabase = await prismaClient.contact.count({
-//     where: {
-//       username: user.username,
-//       id: contact.id,
-//     },
-//   })
+  const totalAddressInDatabase = await prismaClient.address.count({
+    where: {
+      contact_id: contactId,
+      id: address.id,
+    },
+  })
 
-//   if (totalContactInDatabase !== 1) {
-//     throw new ResponseError(404, "contact is not found")
-//   }
+  if (totalAddressInDatabase !== 1) {
+    throw new ResponseError(404, "address is not found")
+  }
 
-//   return prismaClient.contact.update({
-//     where: {
-//       id: contact.id,
-//     },
-//     data: {
-//       first_name: contact.first_name,
-//       last_name: contact.last_name,
-//       email: contact.email,
-//       phone: contact.phone,
-//     },
-//     select: {
-//       id: true,
-//       first_name: true,
-//       last_name: true,
-//       email: true,
-//       phone: true,
-//     },
-//   })
-// }
+  return prismaClient.address.update({
+    where: {
+      id: address.id,
+    },
+    data: {
+      street: address.street,
+      city: address.city,
+      province: address.province,
+      country: address.country,
+      postal_code: address.postal_code,
+    },
+    select: {
+      id: true,
+      street: true,
+      city: true,
+      province: true,
+      country: true,
+      postal_code: true,
+    },
+  })
+}
 
 // const remove = async (user, contactId) => {
 //   contactId = validate(getContactValidation, contactId)
@@ -134,7 +133,7 @@ const get = async (user, contactId, addressId) => {
 export default {
   create,
   get,
-  //   update,
+  update,
   //   remove,
   //   search,
 }

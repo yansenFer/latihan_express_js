@@ -32,22 +32,23 @@ const get = async (req, res, next) => {
   }
 }
 
-// const update = async (req, res, next) => {
-//   try {
-//     const user = req.user
-//     const contactId = req.params.contactId
-//     const request = req.body
-//     // karna saat di body tidak perlu kirim data id, jadi di backend idnya = contactid yang dikirim dari param
-//     request.id = contactId
+const update = async (req, res, next) => {
+  try {
+    const user = req.user
+    const contactId = req.params.contactId
+    const addressId = req.params.addressId
+    const request = req.body
+    request.id = addressId
+    // karna saat di body tidak perlu kirim data id, jadi di backend idnya = contactid yang dikirim dari param
 
-//     const result = await contactService.update(user, request)
-//     res.status(200).json({
-//       data: result,
-//     })
-//   } catch (error) {
-//     next(error)
-//   }
-// }
+    const result = await addressService.update(user, contactId, request)
+    res.status(200).json({
+      data: result,
+    })
+  } catch (error) {
+    next(error)
+  }
+}
 
 // const remove = async (req, res, next) => {
 //   try {
@@ -64,7 +65,7 @@ const get = async (req, res, next) => {
 export default {
   create,
   get,
-  //   update,
+  update,
   //   remove,
   //   search,
 }
